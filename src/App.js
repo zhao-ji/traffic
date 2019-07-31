@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {HashRouter as Router, Switch, Route, Link} from "react-router-dom";
 import { Navbar, Nav } from "react-bootstrap";
 
@@ -7,22 +9,37 @@ import Home from './components/home';
 import Trace from './components/trace';
 import Edit from './components/edit';
 
-function App() {
-  return (
-      <Router>
-          <div>
-              <Header />
-              <hr />
-              <Switch>
-                  <Route exact path="/" component={Home} />
-                  <Route path="/trace" component={Trace} />
-                  <Route path="/edit" component={Edit} />
-                  <Route path="/about" render={() => <h3>about this project</h3>} />
-                  <Route render={() => <h3>No Match</h3> } />
-              </Switch>
-          </div>
-      </Router>
-  );
+import trafficActions from './actions/traffic';
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+    componentDidMount() {
+    }
+
+    render()  {
+        return (
+            <Router>
+                <div>
+                    <Header />
+                    <hr />
+                    <Switch>
+                        <Route exact path="/" render={(props) => <Home
+                                {...props}
+                                connect={this.props.connect}
+                                fetchTrafficData={this.props.fetchTrafficData}
+                                trafficData={this.props.traffic}
+                            />} />
+                        <Route path="/trace" component={Trace} />
+                        <Route path="/edit" component={Edit} />
+                    </Switch>
+                </div>
+            </Router>
+        );
+    }
 }
 
 function Header() {
@@ -41,12 +58,20 @@ function Header() {
                 <Nav.Item>
                     <Link to="/edit">Edit Point and Route</Link>
                 </Nav.Item>
-                <Nav.Item>
-                    <Link to="/about">About</Link>
-                </Nav.Item>
             </Nav>
         </Navbar>
     );
 }
 
-export default App;
+const mapStateToProps = state => ({
+    ...state
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(
+    {
+        ...trafficActions,
+    },
+    dispatch
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
