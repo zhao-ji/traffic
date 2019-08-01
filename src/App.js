@@ -5,11 +5,27 @@ import {HashRouter as Router, Switch, Route, Link} from "react-router-dom";
 import { Navbar, Nav } from "react-bootstrap";
 
 import './App.css';
+
 import Home from './components/home';
 import Trace from './components/trace';
 import Edit from './components/edit';
 
 import trafficActions from './actions/traffic';
+import websocketActions from './actions/websocket';
+
+function renderHome(props, globalProps) {
+    if (globalProps.websocket.connected) {
+        return (
+            <Home
+                {...props}
+                isConnected={globalProps.websocket.connected}
+                subscribe={globalProps.subscribe}
+                traffic={globalProps.traffic}
+            />
+        );
+    }
+    return false;
+}
 
 class App extends Component {
     constructor(props) {
@@ -18,6 +34,7 @@ class App extends Component {
     }
 
     componentDidMount() {
+        this.props.connect();
     }
 
     render()  {
@@ -27,12 +44,7 @@ class App extends Component {
                     <Header />
                     <hr />
                     <Switch>
-                        <Route exact path="/" render={(props) => <Home
-                                {...props}
-                                connect={this.props.connect}
-                                fetchTrafficData={this.props.fetchTrafficData}
-                                trafficData={this.props.traffic}
-                            />} />
+                        <Route exact path="/" render={(props) => renderHome(props, this.props)} />
                         <Route path="/trace" component={Trace} />
                         <Route path="/edit" component={Edit} />
                     </Switch>
@@ -53,10 +65,10 @@ function Header() {
                     <Link to="/">Home</Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Link to="/trace">Trace Route</Link>
+                    <Link to="/trace">Trace</Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Link to="/edit">Edit Point and Route</Link>
+                    <Link to="/edit">Edit Route</Link>
                 </Nav.Item>
             </Nav>
         </Navbar>
@@ -70,6 +82,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => bindActionCreators(
     {
         ...trafficActions,
+        ...websocketActions,
     },
     dispatch
 );

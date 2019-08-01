@@ -5,16 +5,18 @@ const wsAPI = (() => {
     return {
         connect: () => {
             const scheme = window.location.protocol === 'https' ? 'wss' : 'ws';
-            const url = `${scheme}://${window.location.host}/`;
-            socket = ReconnectingWebSocket(url);
+            const url = `${scheme}://traffic.minganci.org/ws/`;
+            // const url = `${scheme}://${window.location.host}/ws/`;
+            socket = new ReconnectingWebSocket(url);
         },
-        send: (kwargs) => {
+        send: kwargs => {
             socket.send(JSON.stringify(kwargs));
         },
-        close: () => {
+        close: store => {
             if (socket && socket.readyState !== socket.CLOSED) {
                 socket.close();
             }
+            store.dispatch({ type: "WS_CONNECTION_CLOSED" });
         },
         listen: store => {
             socket.onopen = () => {
@@ -25,16 +27,7 @@ const wsAPI = (() => {
             };
             socket.onmessage = (message) => {
                 const action = JSON.parse(message.data);
-                switch (action.type) {
-                    case "PING": 
-                        wsAPI.send({
-                            type: "PONG"
-                        });
-                        break;
-                    default:
-                        store.dispatch(action);
-                        break;
-                }
+                store.dispatch(action);
             };
         },
     };

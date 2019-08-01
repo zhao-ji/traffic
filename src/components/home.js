@@ -9,8 +9,9 @@ export default class extends Component {
     }
 
     componentDidMount() {
-        this.props.connect();
-        this.props.fetchTrafficData();
+        if (this.props.isConnected) {
+            this.props.subscribe();
+        }
         this.drawChart();
     }
 

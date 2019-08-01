@@ -1,0 +1,16 @@
+
+                                <Home
+                                    {...props}
+                                    isConnected={this.props.websocket.connected}
+                                    subscribe={this.props.subscribe}
+                                    traffic={this.props.traffic}
+                                />
+                switch (action.type) {
+                    case "PING": 
+                        wsAPI.send({
+                            type: "PONG"
+                        });
+                        break;
+                    default:
+                        store.dispatch(action);
+                        break;

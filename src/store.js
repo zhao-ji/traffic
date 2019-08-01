@@ -1,21 +1,30 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+
 import rootReducer from './reducers/rootReducer';
 
 function initialState() {
     return {
-        websocketConnected: false,
+        websocket: {
+            isLoading: false,
+            connected: false,
+        },
         traffic: {
-            lastUpdate: null,
-            results: [],
+            data: {
+                lastUpdate: null,
+                results: [],
+            },
+            period: [],
         },
     }
 }
 
-export default function configureStore() {
+const store = (function configureStore() {
     return applyMiddleware(thunk)(createStore)(
         rootReducer,
         initialState(),
         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     );
-}
+})()
+
+export default store;
