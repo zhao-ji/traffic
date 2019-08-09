@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {HashRouter as Router, Switch, Route, Link} from "react-router-dom";
-import { Navbar, Nav } from "react-bootstrap";
 
 import './App.css';
 
@@ -56,22 +55,22 @@ class App extends Component {
 
 function Header() {
     return (
-        <Navbar bg="light" expand="lg">
-            <Navbar.Brand>
+        <div>
+            <span>
                 <Link to="/"> Traffic Monitor </Link>
-            </Navbar.Brand>
-            <Nav justify variant="pills">
-                <Nav.Item>
+            </span>
+            <span>
+                <span>
                     <Link to="/">Home</Link>
-                </Nav.Item>
-                <Nav.Item>
+                </span>
+                <span>
                     <Link to="/trace">Trace</Link>
-                </Nav.Item>
-                <Nav.Item>
+                </span>
+                <span>
                     <Link to="/edit">Edit Route</Link>
-                </Nav.Item>
-            </Nav>
-        </Navbar>
+                </span>
+            </span>
+        </div>
     );
 }
 

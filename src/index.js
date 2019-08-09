@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import 'bootstrap/dist/css/bootstrap.css';
+import "react-vis/dist/style.css";
 
 import App from './App';
 import store from './store';
