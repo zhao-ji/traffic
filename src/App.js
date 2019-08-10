@@ -17,9 +17,10 @@ function renderHome(props, globalProps) {
         return (
             <Home
                 {...props}
-                isConnected={globalProps.websocket.connected}
                 subscribe={globalProps.subscribe}
-                traffic={globalProps.traffic}
+                flopLineSeriesVisibility={globalProps.flopLineSeriesVisibility}
+                data={globalProps.traffic.data.results}
+                period={globalProps.traffic.period}
             />
         );
     }
@@ -57,18 +58,13 @@ function Header() {
     return (
         <div>
             <span>
-                <Link to="/"> Traffic Monitor </Link>
+                <Link to="/">Home</Link>
             </span>
             <span>
-                <span>
-                    <Link to="/">Home</Link>
-                </span>
-                <span>
-                    <Link to="/trace">Trace</Link>
-                </span>
-                <span>
-                    <Link to="/edit">Edit Route</Link>
-                </span>
+                <Link to="/trace">Trace</Link>
+            </span>
+            <span>
+                <Link to="/edit">Edit Route</Link>
             </span>
         </div>
     );

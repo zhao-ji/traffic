@@ -10,6 +10,9 @@ const trafficActions = {
         dispatch({ type: "FETCH_TRAFFIC_DATA_TRY", kwargs });
         wsAPI.send(kwargs);
     },
+    flopLineSeriesVisibility: kwargs => dispatch => {
+        dispatch({ type: "FLOP_LINE_SERIES_VISIBILITY", kwargs });
+    },
 }
 
 export default trafficActions

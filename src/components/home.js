@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import { Form } from "react-bootstrap";
 import Moment from 'moment';
 import {
   XYPlot,
   XAxis,
   YAxis,
   HorizontalGridLines,
-  LineMarkSeries
+  LineSeries,
+  DiscreteColorLegend,
 } from 'react-vis';
 
 import range from '../utils';
@@ -16,48 +16,42 @@ export default class extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.onLegendClick = this.onLegendClick.bind(this);
     }
 
     componentDidMount() {
-        if (this.props.isConnected) {
-            this.props.subscribe();
-        }
+        this.props.subscribe();
+    }
+
+    onLegendClick(item, number) {
+        console.log(item);
+        console.log(number);
+        this.props.flopLineSeriesVisibility({num: number});
     }
 
     render()  {
-        if (!("home" in this.props.traffic.data.results)) {
+        if (this.props.data.length <= 0) {
             return false;
         };
-        let routes = this.props.traffic.data.results.map(item => `${item["source"]} - ${item["dest"]}`);
+        let routes = this.props.data.map(item => `${item["start"]} - ${item["stop"]}`);
         return (
             <>
+                <DiscreteColorLegend 
+                    items={routes.map(route => {return {"title": route}})}
+                    orientation="horizontal"
+                    onItemClick={this.onLegendClick}
+                />
             <Chart>
-                <LineMarkSeries
-                    xType="time"
-                    style={{
-                        strokeWidth: '3px'
-                    }}
-                    lineStyle={{stroke: 'red'}}
-                    markStyle={{stroke: 'blue'}}
-                    data={
-                        this.props.traffic.data.results.home.city.map(item => ({x: Moment(item[0]), y: item[1]/60}))
-                    }
-                />
-                <LineMarkSeries
-                    curve={'curveMonotoneX'}
-                    data={
-                        this.props.traffic.data.results.home.korean_shop.map(item => ({x: Moment(item[0]), y: item[1]/60}))
-                    }
-                />
+                {this.props.data.map(route => ( !route.disabled &&
+                    <LineSeries data={route.data.map(item => ({x: Moment(item[0]), y: item[1]/60}))} />
+                ))}
             </Chart>
+            <br/>
+            <br/>
+            <br/>
             <div>
-                {routes.map(route =>
-                    <Form.Check type="checkbox" label={route} onClick={() => {routes[route] = !routes[route]}} />
-                )}
-            </div>
-            <div>
-                <input type="datetime" id="start" />
-                <input type="datetime" id="stop" />
+                <label> Choose Start Time: </label> <input type="datetime" id="start" />
+                <label> Choose Stop Time: </label> <input type="datetime" id="stop" />
             </div>
             </>
         );
@@ -75,7 +69,7 @@ class Chart extends Component {
         const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - 200;
         const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 200;
         return (
-            <XYPlot width={w} height={h} margin={{left: 400}}>
+            <XYPlot width={w} height={h}>
                 <HorizontalGridLines />
                 <XAxis
                     title="Time"

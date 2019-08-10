@@ -8,6 +8,7 @@ export default (state = {}, action) => {
             return newState
         }
         case 'SUBSCRIBE_SUCCESS': {
+            action.data.map(item => item.disabled = false)
             newState.data.results = action.data;
             newState.data.lastUpdate = null;
             return newState
@@ -25,6 +26,10 @@ export default (state = {}, action) => {
                 kwargs: action.kwargs,
                 data: action.data,
             };
+            return newState
+        }
+        case 'FLOP_LINE_SERIES_VISIBILITY': {
+            newState.data.results[action.kwargs.num].disabled = !newState.data.results[action.kwargs.num].disabled;
             return newState
         }
         default:
