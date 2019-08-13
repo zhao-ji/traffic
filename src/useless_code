@@ -14,3 +14,35 @@
                     default:
                         store.dispatch(action);
                         break;
+
+function renderHome(props, globalProps) {
+    if (globalProps.websocket.connected) {
+        return (
+            <Home
+                {...props}
+                subscribe={globalProps.subscribe}
+                flopLineSeriesVisibility={globalProps.flopLineSeriesVisibility}
+                data={globalProps.traffic.data.results}
+                period={globalProps.traffic.period}
+            />
+        );
+    }
+    return false;
+}
+
+const mapStateToProps = state => ({
+    ...state
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(
+    {
+        ...trafficActions,
+        ...websocketActions,
+    },
+    dispatch
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';

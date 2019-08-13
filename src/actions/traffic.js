@@ -13,6 +13,6 @@ const trafficActions = {
     flopLineSeriesVisibility: kwargs => dispatch => {
         dispatch({ type: "FLOP_LINE_SERIES_VISIBILITY", kwargs });
     },
-}
+};
 
-export default trafficActions
+export default trafficActions;

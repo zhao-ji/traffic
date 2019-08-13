@@ -12,11 +12,10 @@ const wsAPI = (() => {
         send: kwargs => {
             socket.send(JSON.stringify(kwargs));
         },
-        close: store => {
+        close: () => {
             if (socket && socket.readyState !== socket.CLOSED) {
                 socket.close();
             }
-            store.dispatch({ type: "WS_CONNECTION_CLOSED" });
         },
         listen: store => {
             socket.onopen = () => {

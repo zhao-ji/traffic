@@ -1,0 +1,17 @@
+.tab {
+    background: white repeat scroll 0% 0%;
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+    color: black;
+    display: inline-block;
+    flex: 1 1 0%;
+    padding: 5px;
+    font-size: 130%;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+}
+a.tab {
+    color: inherit;
+    text-decoration: none;
+}

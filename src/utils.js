@@ -1,4 +1,4 @@
-export default function range(start, stop, step) {
+function range(start, stop, step) {
     if (typeof stop == 'undefined') {
         // one param defined
         stop = start;
@@ -20,3 +20,7 @@ export default function range(start, stop, step) {
 
     return result;
 };
+
+export default {
+    range: range,
+}

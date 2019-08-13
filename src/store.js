@@ -10,12 +10,19 @@ function initialState() {
             connected: false,
         },
         traffic: {
-            data: {
-                lastUpdate: null,
-                results: [],
-            },
+            // last time we recieved the update data
+            lastUpdate: null,
+            // subscribe data and live update data
+            results: [],
+            // user choose data range
             period: [],
         },
+        trace: {
+            "home to office": {
+                results: [],
+                lastUpdate: null,
+            },
+        }
     }
 }
 

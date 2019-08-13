@@ -3,33 +3,29 @@ export default (state = {}, action) => {
 
     switch (action.type) {
         case 'SUBSCRIBE': {
-            newState.results = [];
-            newState.lastUpdate = null;
+            newState.data.results = [];
+            newState.data.lastUpdate = null;
             return newState
         }
         case 'SUBSCRIBE_SUCCESS': {
             action.data.map(item => item.disabled = false)
-            newState.results = action.data;
-            newState.lastUpdate = null;
+            newState.data.results = action.data;
+            newState.data.lastUpdate = null;
             return newState
         }
-        case 'FETCH_TRAFFIC_DATA_TRY': {
-            newState.period = {
+        case 'FETCH_TRACE_DATA_TRY': {
+            newState.trace = {
                 isLoading: true,
                 kwargs: action.kwargs,
             };
             return newState
         }
-        case 'FETCH_TRAFFIC_DATA_SUCCESS': {
-            newState.period = {
+        case 'FETCH_TRACE_DATA_SUCCESS': {
+            newState.trace = {
                 isLoading: false,
                 kwargs: action.kwargs,
                 data: action.data,
             };
-            return newState
-        }
-        case 'FLOP_LINE_SERIES_VISIBILITY': {
-            newState.results[action.kwargs.num].disabled = !newState.results[action.kwargs.num].disabled;
             return newState
         }
         default:

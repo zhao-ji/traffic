@@ -9,18 +9,31 @@ import {
   DiscreteColorLegend,
 } from 'react-vis';
 
-import range from '../utils';
+import utils from '../utils';
 
 
 export default class extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+
         this.onLegendClick = this.onLegendClick.bind(this);
     }
 
     componentDidMount() {
-        this.props.subscribe();
+        this.props.connect();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (!prevProps.websocket.connected && this.props.websocket.connected) {
+            this.props.subscribe();
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.props.websocket.connected) {
+            this.props.disconnect();
+        }
     }
 
     onLegendClick(item, number) {
@@ -30,20 +43,22 @@ export default class extends Component {
     }
 
     render()  {
-        if (this.props.data.length <= 0) {
+        const trafficData = this.props.traffic.results;
+        if (trafficData.length <= 0) {
             return false;
         };
-        let routes = this.props.data.map(item => `${item["start"]} - ${item["stop"]}`);
+
+        let routes = trafficData.map(item => `${item["start"]} - ${item["stop"]}`);
         return (
             <>
-                <DiscreteColorLegend 
-                    items={routes.map(route => {return {"title": route}})}
-                    orientation="horizontal"
-                    onItemClick={this.onLegendClick}
-                />
+            <DiscreteColorLegend 
+                items={routes.map(route => {return {"title": route}})}
+                orientation="horizontal"
+                onItemClick={this.onLegendClick}
+            />
             <Chart>
-                {this.props.data.map(route => ( !route.disabled &&
-                    <LineSeries data={route.data.map(item => ({x: Moment(item[0]), y: item[1]/60}))} />
+                {trafficData.map((route, index) => ( !route.disabled &&
+                    <LineSeries key={index} data={route.data.map(item => ({x: Moment(item[0]), y: item[1]/60}))} />
                 ))}
             </Chart>
             <br/>
@@ -67,7 +82,7 @@ class Chart extends Component {
 
     render() {
         const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - 200;
-        const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 200;
+        const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 300;
         return (
             <XYPlot width={w} height={h}>
                 <HorizontalGridLines />
@@ -78,7 +93,7 @@ class Chart extends Component {
                 />
                 <YAxis
                     title="Duration (min)"
-                    tickValues={range(0, 51, 5)}
+                    tickValues={utils.range(0, 51, 5)}
                 />
                 {this.props.children}
             </XYPlot>
