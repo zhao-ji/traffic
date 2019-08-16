@@ -11,7 +11,6 @@ import {
 
 import utils from '../utils';
 
-
 export default class extends Component {
     constructor(props) {
         super(props);
@@ -61,18 +60,10 @@ export default class extends Component {
                     <LineSeries key={index} data={route.data.map(item => ({x: Moment(item[0]), y: item[1]/60}))} />
                 ))}
             </Chart>
-            <br/>
-            <br/>
-            <br/>
-            <div>
-                <label> Choose Start Time: </label> <input type="datetime" id="start" />
-                <label> Choose Stop Time: </label> <input type="datetime" id="stop" />
-            </div>
             </>
         );
     }
 }
-
 
 class Chart extends Component {
     constructor(props) {
