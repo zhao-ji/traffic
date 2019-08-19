@@ -18,12 +18,18 @@ function initialState() {
             period: [],
         },
         trace: {
-            "home to office": {
-                results: [],
+            google: {
+                isLoading: false,
+                result: null,
                 lastUpdate: null,
             },
-        }
-    }
+            microsoft: {
+                isLoading: false,
+                result: null,
+                lastUpdate: null,
+            },
+        },
+    };
 }
 
 const store = (function configureStore() {

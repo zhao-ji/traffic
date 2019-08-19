@@ -1,24 +1,26 @@
 import React, {Component} from 'react';
-import {InputGroup, Form, Col, Button} from 'react-bootstrap';
+import {InputGroup, Form, Row, Col, Button} from 'react-bootstrap';
+import {Table} from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 
 export default class extends Component {
     constructor(props) {
         super(props);
         this.state = {
             method: "driving",
-            start: "",
-            stop: "",
+            start: "60 stanhope road",
+            stop: "132 marua road",
         };
+
+        this.onMethodChange = this.onMethodChange.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.submit = this.submit.bind(this);
     }
 
     componentDidMount() {
         this.props.connect();
-    }
-
-    componentDidUpdate(prevProps) {
-        if (!prevProps.websocket.connected && this.props.websocket.connected) {
-            this.props.subscribe();
-        }
     }
 
     componentWillUnmount() {
@@ -29,11 +31,11 @@ export default class extends Component {
 
     submit() {
         if (this.props.websocket.connected) {
-            this.props.submit({
-                type: "TRACE_ROUTE",
-                method: this.state.method,
+            this.props.fetchTraceData({
+                type: "FETCH_TRACE_DATA_TRY",
                 start: this.state.start,
                 stop: this.state.stop,
+                method: this.state.method,
             });
         } else {
             console.log("connection failed");
@@ -56,11 +58,52 @@ export default class extends Component {
         }
     }
 
+    renderTable() {
+        const google = this.props.trace.google;
+        if (google.isLoading || !google.result) {
+            return false;
+        }
+        return (
+            <Row>
+                <Col md={{ span: 8, offset: 2}} lg={{ span: 8, offset: 2}}>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Source</th>
+                                <th>Duration</th>
+                                <th>Distance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> Google </td>
+                                <td> {google.result.duration} </td>
+                                <td> {google.result.distance} </td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </Col>
+            </Row>
+        );
+    }
+
+    renderLoadingIcon() {
+        const google = this.props.trace.google;
+        if (!google.isLoading) {
+            return false;
+        }
+        return (
+            <div style={{textAlign: "center"}}>
+                <FontAwesomeIcon icon={faSpinner} size="lg" spin />
+            </div>
+        );
+    }
+
     render()  {
         return (
             <>
             <Form.Row>
-                <Form.Group as={Col} lg={3} md={3}>
+                <Form.Group as={Col} lg={{ span: 3, offset: 1}} md={{span: 3, offset: 1}}>
                     <InputGroup>
                         <InputGroup.Prepend>
                             <InputGroup.Text>Method</InputGroup.Text>
@@ -72,7 +115,7 @@ export default class extends Component {
                         </Form.Control>
                     </InputGroup>
                 </Form.Group>
-                <Form.Group as={Col} lg={9} md={9}>
+                <Form.Group as={Col} lg={7} md={7}>
                     <InputGroup>
                         <InputGroup.Prepend>
                             <InputGroup.Text>Start/Stop</InputGroup.Text>
@@ -80,13 +123,13 @@ export default class extends Component {
                         <Form.Control
                             type="text"
                             placeholder="address or point"
-                            defaultValue={this.state.start}
+                            defaultValue="60 stanhope road"
                             onChange={(event) => this.onChange("start", event)}
                         />
                         <Form.Control
                             type="text"
                             placeholder="address or point"
-                            defaultValue={this.state.stop}
+                            defaultValue="130 marua road"
                             onChange={(event) => this.onChange("stop", event)}
                         />
                         <InputGroup.Append>
@@ -96,6 +139,8 @@ export default class extends Component {
                     </InputGroup>
                 </Form.Group>
             </Form.Row>
+            {this.renderTable()}
+            {this.renderLoadingIcon()}
             </>
         );
     }
