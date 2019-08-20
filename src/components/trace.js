@@ -10,13 +10,14 @@ export default class extends Component {
         super(props);
         this.state = {
             method: "driving",
-            start: "60 stanhope road",
-            stop: "132 marua road",
+            start: null,
+            stop: null,
         };
 
         this.onMethodChange = this.onMethodChange.bind(this);
         this.onChange = this.onChange.bind(this);
         this.submit = this.submit.bind(this);
+        this.switch = this.switch.bind(this);
     }
 
     componentDidMount() {
@@ -47,14 +48,14 @@ export default class extends Component {
     }
 
     onMethodChange(event) {
-        this.setState({ method: event.target.data });
+        this.setState({ method: event.target.value });
     }
 
     onChange(type, event) {
         if (type === "start") {
-            this.setState({ start: event.target.data });
+            this.setState({ start: event.target.value });
         } else if (type === "stop") {
-            this.setState({ stop: event.target.data });
+            this.setState({ stop: event.target.value });
         }
     }
 
@@ -111,7 +112,8 @@ export default class extends Component {
                         <Form.Control as="select" onChange={this.onMethodChange}>
                             <option value="driving">Driving</option>
                             <option value="walking">Walking</option>
-                            <option value="bus">Bus</option>
+                            <option value="transit">Transit</option>
+                            <option value="bicycling">Bicycling</option>
                         </Form.Control>
                     </InputGroup>
                 </Form.Group>
@@ -121,16 +123,22 @@ export default class extends Component {
                             <InputGroup.Text>Start/Stop</InputGroup.Text>
                         </InputGroup.Prepend>
                         <Form.Control
-                            type="text"
+                            as="input"
+                            type="search"
                             placeholder="address or point"
-                            defaultValue="60 stanhope road"
+                            defaultValue={this.state.start}
+                            key={"start" + this.state.start}
                             onChange={(event) => this.onChange("start", event)}
+                            autoFocus
                         />
                         <Form.Control
-                            type="text"
+                            as="input"
+                            type="search"
                             placeholder="address or point"
-                            defaultValue="130 marua road"
+                            defaultValue={this.state.stop}
+                            key={"stop" + this.state.stop}
                             onChange={(event) => this.onChange("stop", event)}
+                            autoFocus
                         />
                         <InputGroup.Append>
                             <Button variant="outline-secondary" onClick={this.switch}>Reverse</Button>
