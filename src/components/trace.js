@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {InputGroup, Form, Row, Col, Button} from 'react-bootstrap';
+import {ListGroup, InputGroup, Form, Row, Col, Button} from 'react-bootstrap';
 import {Table} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -38,6 +38,14 @@ export default class extends Component {
                 stop: this.state.stop,
                 method: this.state.method,
             });
+            if (this.state.method === "driving" || this.state.method === "transit") {
+                this.props.fetchBingTraceData({
+                    type: "FETCH_BING_TRACE_DATA_TRY",
+                    start: this.state.start,
+                    stop: this.state.stop,
+                    method: this.state.method,
+                });
+            }
         } else {
             console.log("connection failed");
         }
@@ -57,6 +65,35 @@ export default class extends Component {
         } else if (type === "stop") {
             this.setState({ stop: event.target.value });
         }
+        this.props.fetchAddressSuggestions({
+            type: type,
+            text: event.target.value,
+        });
+    }
+
+    onSuggestionClick(type, event) {
+        console.log(type, event);
+    }
+
+    renderSuggestions() {
+        const suggestions = this.props.trace.suggestions;
+        if (suggestions.isLoading || !suggestions.results) {
+            return false;
+        }
+        return (
+            <ListGroup>
+                {suggestions.results.map((s, index) => (
+                    <ListGroup.Item
+                        key={index}
+                        data-value={s}
+                        onClick={(event) => this.props.onSuggestionClick(suggestions.type, event)}
+                        action
+                    >
+                        {s}
+                    </ListGroup.Item>
+                ))}
+            </ListGroup>
+        );
     }
 
     renderTable() {

@@ -18,12 +18,17 @@ function initialState() {
             period: [],
         },
         trace: {
+            suggestions: {
+                isLoading: false,
+                results: [],
+                type: null,
+            },
             google: {
                 isLoading: false,
                 result: null,
                 lastUpdate: null,
             },
-            microsoft: {
+            bing: {
                 isLoading: false,
                 result: null,
                 lastUpdate: null,
