@@ -13,6 +13,9 @@ const traceActions = {
         dispatch({ type: "FETCH_ADDRESS_SUGGESTIONS_TRY", kwargs });
         wsAPI.send(kwargs);
     },
+    cleanAddressSuggestions: () => dispatch => {
+        dispatch({ type: "CLEAN_ADDRESS_SUGGESTIONS" });
+    },
 }
 
 export default traceActions;

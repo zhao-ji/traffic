@@ -18,6 +18,7 @@ export default class extends Component {
         this.onChange = this.onChange.bind(this);
         this.submit = this.submit.bind(this);
         this.switch = this.switch.bind(this);
+        this.onSuggestionClick = this.onSuggestionClick.bind(this);
     }
 
     componentDidMount() {
@@ -66,13 +67,19 @@ export default class extends Component {
             this.setState({ stop: event.target.value });
         }
         this.props.fetchAddressSuggestions({
-            type: type,
+            type: "FETCH_ADDRESS_SUGGESTIONS_TRY",
+            side: type,
             text: event.target.value,
         });
     }
 
     onSuggestionClick(type, event) {
-        console.log(type, event);
+        if (type === "start") {
+            this.setState({ start: event.currentTarget.dataset.value });
+        } else if (type === "stop") {
+            this.setState({ stop: event.currentTarget.dataset.value });
+        }
+        this.props.cleanAddressSuggestions();
     }
 
     renderSuggestions() {
@@ -86,7 +93,7 @@ export default class extends Component {
                     <ListGroup.Item
                         key={index}
                         data-value={s}
-                        onClick={(event) => this.props.onSuggestionClick(suggestions.type, event)}
+                        onClick={(event) => this.onSuggestionClick(suggestions.side, event)}
                         action
                     >
                         {s}
@@ -98,8 +105,19 @@ export default class extends Component {
 
     renderTable() {
         const google = this.props.trace.google;
+        let showGoogle = true;
         if (google.isLoading || !google.result) {
-            return false;
+            showGoogle = false;
+        }
+
+        const bing = this.props.trace.bing;
+        let showBing = true;
+        if (bing.isLoading || !bing.result) {
+            showBing = false;
+        }
+
+        if (!showGoogle && !showBing) {
+            return false
         }
         return (
             <Row>
@@ -113,11 +131,20 @@ export default class extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td> Google </td>
-                                <td> {google.result.duration} </td>
-                                <td> {google.result.distance} </td>
-                            </tr>
+                            {showGoogle &&
+                                <tr>
+                                    <td> Google </td>
+                                    <td> {google.result.duration} </td>
+                                    <td> {google.result.distance} </td>
+                                </tr>
+                            }
+                            {showBing &&
+                                <tr>
+                                    <td> Bing </td>
+                                    <td> {bing.result.duration} mins </td>
+                                    <td> {bing.result.distance} km </td>
+                                </tr>
+                            }
                         </tbody>
                     </Table>
                 </Col>
@@ -127,7 +154,8 @@ export default class extends Component {
 
     renderLoadingIcon() {
         const google = this.props.trace.google;
-        if (!google.isLoading) {
+        const bing = this.props.trace.bing;
+        if (!google.isLoading && !bing.isLoading) {
             return false;
         }
         return (
@@ -166,6 +194,8 @@ export default class extends Component {
                             defaultValue={this.state.start}
                             key={"start" + this.state.start}
                             onChange={(event) => this.onChange("start", event)}
+                            onFocus={this.props.cleanAddressSuggestions}
+                            onBlur={this.props.cleanAddressSuggestions}
                             autoFocus
                         />
                         <Form.Control
@@ -175,6 +205,8 @@ export default class extends Component {
                             defaultValue={this.state.stop}
                             key={"stop" + this.state.stop}
                             onChange={(event) => this.onChange("stop", event)}
+                            onFocus={this.props.cleanAddressSuggestions}
+                            onBlur={this.props.cleanAddressSuggestions}
                             autoFocus
                         />
                         <InputGroup.Append>
@@ -184,6 +216,7 @@ export default class extends Component {
                     </InputGroup>
                 </Form.Group>
             </Form.Row>
+            {this.renderSuggestions()}
             {this.renderTable()}
             {this.renderLoadingIcon()}
             </>

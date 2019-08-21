@@ -39,6 +39,7 @@ export default (state = {}, action) => {
         case 'FETCH_ADDRESS_SUGGESTIONS_TRY': {
             newState.suggestions = {
                 isLoading: true,
+                side: action.kwargs.side,
                 kwargs: action.kwargs,
             };
             return newState
@@ -51,6 +52,14 @@ export default (state = {}, action) => {
         case 'FETCH_ADDRESS_SUGGESTIONS_ERROR': {
             newState.suggestions.isLoading = false;
             newState.suggestions.error = action.data;
+            return newState
+        }
+        case 'CLEAN_ADDRESS_SUGGESTIONS': {
+            newState.suggestions = {
+                isLoading: false,
+                results: [],
+                side: null,
+            };
             return newState
         }
         default:

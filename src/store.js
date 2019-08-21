@@ -21,7 +21,7 @@ function initialState() {
             suggestions: {
                 isLoading: false,
                 results: [],
-                type: null,
+                side: null,
             },
             google: {
                 isLoading: false,
