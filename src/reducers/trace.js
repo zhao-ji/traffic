@@ -36,6 +36,11 @@ export default (state = {}, action) => {
             newState.bing.error = action.data;
             return newState
         }
+        case 'CLEAN_BING_TRACE_DATA': {
+            newState.bing.isLoading = false;
+            newState.bing.result = null;
+            return newState
+        }
         case 'FETCH_ADDRESS_SUGGESTIONS_TRY': {
             newState.suggestions = {
                 isLoading: true,
@@ -55,11 +60,7 @@ export default (state = {}, action) => {
             return newState
         }
         case 'CLEAN_ADDRESS_SUGGESTIONS': {
-            newState.suggestions = {
-                isLoading: false,
-                results: [],
-                side: null,
-            };
+            newState.suggestions.results = [];
             return newState
         }
         default:

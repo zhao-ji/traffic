@@ -34,18 +34,18 @@ export default class extends Component {
     submit() {
         if (this.props.websocket.connected) {
             this.props.fetchTraceData({
-                type: "FETCH_TRACE_DATA_TRY",
                 start: this.state.start,
                 stop: this.state.stop,
                 method: this.state.method,
             });
             if (this.state.method === "driving" || this.state.method === "transit") {
                 this.props.fetchBingTraceData({
-                    type: "FETCH_BING_TRACE_DATA_TRY",
                     start: this.state.start,
                     stop: this.state.stop,
                     method: this.state.method,
                 });
+            } else {
+                this.props.cleanBingTraceData();
             }
         } else {
             console.log("connection failed");
@@ -67,7 +67,6 @@ export default class extends Component {
             this.setState({ stop: event.target.value });
         }
         this.props.fetchAddressSuggestions({
-            type: "FETCH_ADDRESS_SUGGESTIONS_TRY",
             side: type,
             text: event.target.value,
         });
@@ -87,19 +86,29 @@ export default class extends Component {
         if (suggestions.isLoading || !suggestions.results) {
             return false;
         }
+        let grid = { span: 3 };
+        if (suggestions.side === "start") {
+            grid.offset = 4;
+        } else if (suggestions.side === "stop") {
+            grid.offset = 7;
+        }
         return (
-            <ListGroup>
-                {suggestions.results.map((s, index) => (
-                    <ListGroup.Item
-                        key={index}
-                        data-value={s}
-                        onClick={(event) => this.onSuggestionClick(suggestions.side, event)}
-                        action
-                    >
-                        {s}
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
+            <Row>
+                <Col md={grid} lg={grid}>
+                    <ListGroup style={{marginTop: "-1em" }}>
+                        {suggestions.results.map((s, index) => (
+                            <ListGroup.Item
+                                key={index}
+                                data-value={s}
+                                onClick={(event) => this.onSuggestionClick(suggestions.side, event)}
+                                action
+                            >
+                                {s}
+                            </ListGroup.Item>
+                        ))}
+                    </ListGroup>
+                </Col>
+            </Row>
         );
     }
 
@@ -195,7 +204,6 @@ export default class extends Component {
                             key={"start" + this.state.start}
                             onChange={(event) => this.onChange("start", event)}
                             onFocus={this.props.cleanAddressSuggestions}
-                            onBlur={this.props.cleanAddressSuggestions}
                             autoFocus
                         />
                         <Form.Control
@@ -206,7 +214,6 @@ export default class extends Component {
                             key={"stop" + this.state.stop}
                             onChange={(event) => this.onChange("stop", event)}
                             onFocus={this.props.cleanAddressSuggestions}
-                            onBlur={this.props.cleanAddressSuggestions}
                             autoFocus
                         />
                         <InputGroup.Append>
