@@ -34,6 +34,20 @@ function initialState() {
                 lastUpdate: null,
             },
         },
+        edit: {
+            address: {
+                isLoading: false,
+                results: [],
+            },
+            route: {
+                isLoading: false,
+                results: [],
+            },
+            trace: {
+                isLoading: false,
+                results: [],
+            },
+        },
     };
 }
 

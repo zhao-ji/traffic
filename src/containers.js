@@ -7,6 +7,7 @@ import EditPage from './components/edit';
 
 import trafficActions from './actions/traffic';
 import traceActions from './actions/trace';
+import editActions from './actions/edit';
 import websocketActions from './actions/websocket';
 
 
@@ -27,8 +28,13 @@ const traceReduxConnection = createReduxConnection({
     ...websocketActions,
 }, "websocket", "trace");
 
+const editReduxConnection = createReduxConnection({
+    ...editActions,
+    ...websocketActions,
+}, "websocket", "edit");
+
 const Home = homeReduxConnection(HomePage);
-const Edit = homeReduxConnection(EditPage);
+const Edit = editReduxConnection(EditPage);
 const Trace = traceReduxConnection(TracePage);
 
 const Container = {
