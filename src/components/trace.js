@@ -143,15 +143,15 @@ export default class extends Component {
                             {showGoogle &&
                                 <tr>
                                     <td> Google </td>
-                                    <td> {google.result.duration} </td>
-                                    <td> {google.result.distance} </td>
+                                    <td> {(google.result.duration/60).toFixed(2)} mins</td>
+                                    <td> {(google.result.distance/1000).toFixed(2)} km</td>
                                 </tr>
                             }
                             {showBing &&
                                 <tr>
                                     <td> Bing </td>
-                                    <td> {bing.result.duration} mins </td>
-                                    <td> {bing.result.distance} km </td>
+                                    <td> {(bing.result.duration/60).toFixed(2)} mins </td>
+                                    <td> {(bing.result.distance/1000).toFixed(2)} km </td>
                                 </tr>
                             }
                         </tbody>
