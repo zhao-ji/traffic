@@ -16,6 +16,20 @@ export default (state = {}, action) => {
             newState.address.error = action.data;
             return newState
         }
+        case 'CREATE_ADDRESS_TRY': {
+            newState.address.isLoading = true;
+            return newState
+        }
+        case 'CREATE_ADDRESS_SUCCESS': {
+            newState.address.isLoading = false;
+            newState.address.results = action.data;
+            return newState
+        }
+        case 'CREATE_ADDRESS_ERROR': {
+            newState.address.isLoading = false;
+            newState.address.error = action.data;
+            return newState
+        }
         case 'FETCH_ROUTE_TRY': {
             newState.route.isLoading = true;
             return newState

@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import {ListGroup, InputGroup, Form, Row, Col, Button} from 'react-bootstrap';
+import {Form, Row, Col, Button} from 'react-bootstrap';
 import {Table} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export default class extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isCreatingRoute: false,
         };
     }
 
@@ -68,9 +69,8 @@ export default class extends Component {
             <>
             <Row>
                 <Col md={{ span: 8, offset: 2}} lg={{ span: 8, offset: 2}}>
-                    <h3>
-                        Address
-                    </h3>
+                    <h3> Address </h3>
+                    <FontAwesomeIcon icon={faPlus} size="lg" onClick={this.createRoute} />
                     <Table striped bordered hover>
                         <thead>
                             <tr>
@@ -83,11 +83,20 @@ export default class extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {
-                                !this.props.edit.address.results.isLoading &&
-                                this.props.edit.address.results.map(
-                                    (result, index) => <AddressLineItem key={index} result={result} />
-                                )
+                            {!this.props.edit.address.results.isLoading && this.props.edit.address.results.map(
+                                (result, index) => <AddressLineItem key={index} result={result} deleteAddress={this.props.deleteAddress}/>
+                            )}
+                            {this.state.isCreatingRoute &&
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <button>Create</button>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </Table>
@@ -111,16 +120,9 @@ export default class extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {
-                                !this.props.edit.route.results.isLoading &&
-                                this.props.edit.route.results.map(
-                                    (result, index) =>
-                                    <RouteLineItem
-                                        key={index} result={result}
-                                        fetchTrace={this.props.fetchTrace}
-                                    />
-                                )
-                            }
+                            { !this.props.edit.route.results.isLoading && this.props.edit.route.results.map(
+                                (result, index) => <RouteLineItem key={index} result={result} fetchTrace={this.props.fetchTrace} />
+                            )}
                         </tbody>
                     </Table>
                 </Col>
@@ -136,20 +138,39 @@ class AddressLineItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isEditing: false,
+            address: null,
+            alias: null,
         };
+
+        this.deleteAddress = this.deleteAddress.bind(this);
+    }
+
+    deleteAddress() {
+        this.props.deleteAddress({address_id: this.props.result.id});
+    }
+
+    startEdit() {
+        this.setState({ isEditing: true});
+    }
+
+    onAddressChange(event) {
+        this.setState({ address: event.target.value });
     }
 
     render() {
         return (
             <tr>
                 <td>{this.props.result.id}</td>
-                <td>{this.props.result.address}</td>
+                <td onClick={this.startEdit} contenteditable={this.state.isEditing} onChange={this.onAddressChange}>{this.props.result.address}</td>
                 <td>{this.props.result.alias}</td>
                 <td>{this.props.result.latitude}</td>
                 <td>{this.props.result.longitude}</td>
                 <td>
-                    <button>Delete</button>
-                    <button>Related Route</button>
+                    {this.state.isEditing
+                        ? <> <button>Cancel</button> <button>Submit</button> </>
+                        : <> <button onClick={this.deleteAddress}>Delete</button> <button>Related Route</button> </>
+                    }
                 </td>
             </tr>
         );
