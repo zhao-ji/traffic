@@ -29,6 +29,10 @@ export default class extends Component {
         }
     }
 
+    createRoute = () => {
+        this.setState({ isCreatingRoute: true });
+    }
+
     renderTrace() {
         return (
             <>
@@ -89,10 +93,10 @@ export default class extends Component {
                             {this.state.isCreatingRoute &&
                                 <tr>
                                     <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td contenteditable={this.state.isEditing}></td>
+                                    <td contenteditable={this.state.isEditing}></td>
+                                    <td contenteditable={this.state.isEditing}></td>
+                                    <td contenteditable={this.state.isEditing}></td>
                                     <td>
                                         <button>Create</button>
                                     </td>
@@ -162,7 +166,7 @@ class AddressLineItem extends Component {
         return (
             <tr>
                 <td>{this.props.result.id}</td>
-                <td onClick={this.startEdit} contenteditable={this.state.isEditing} onChange={this.onAddressChange}>{this.props.result.address}</td>
+                <td onClick={this.startEdit} contentEditable={this.state.isEditing} onChange={this.onAddressChange}>{this.props.result.address}</td>
                 <td>{this.props.result.alias}</td>
                 <td>{this.props.result.latitude}</td>
                 <td>{this.props.result.longitude}</td>
