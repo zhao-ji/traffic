@@ -9,6 +9,7 @@ export default class extends Component {
         super(props);
         this.state = {
             isCreatingRoute: false,
+            isCreatingAddress: false,
         };
     }
 
@@ -31,6 +32,10 @@ export default class extends Component {
 
     createRoute = () => {
         this.setState({ isCreatingRoute: true });
+    }
+
+    createAddress = () => {
+        this.setState({ isCreatingAddress: true });
     }
 
     renderTrace() {
@@ -74,7 +79,11 @@ export default class extends Component {
             <Row>
                 <Col md={{ span: 8, offset: 2}} lg={{ span: 8, offset: 2}}>
                     <h3> Address </h3>
-                    <FontAwesomeIcon icon={faPlus} size="lg" onClick={this.createRoute} />
+                    <FontAwesomeIcon
+                        className="float-right" style={{ margin: "0.3em"}}
+                        icon={faPlus} size="2x" color="teal"
+                        onClick={this.createAddress}
+                    />
                     <Table striped bordered hover>
                         <thead>
                             <tr>
@@ -90,7 +99,7 @@ export default class extends Component {
                             {!this.props.edit.address.results.isLoading && this.props.edit.address.results.map(
                                 (result, index) => <AddressLineItem key={index} result={result} deleteAddress={this.props.deleteAddress}/>
                             )}
-                            {this.state.isCreatingRoute &&
+                            {this.state.isCreatingAddress &&
                                 <tr>
                                     <td></td>
                                     <td contenteditable={this.state.isEditing}></td>
@@ -98,7 +107,7 @@ export default class extends Component {
                                     <td contenteditable={this.state.isEditing}></td>
                                     <td contenteditable={this.state.isEditing}></td>
                                     <td>
-                                        <button>Create</button>
+                                        <Button variant="outline-success">Create</Button>
                                     </td>
                                 </tr>
                             }
@@ -112,6 +121,11 @@ export default class extends Component {
                     <h3>
                         Route
                     </h3>
+                    <FontAwesomeIcon
+                        className="float-right" style={{ margin: "0.3em"}}
+                        icon={faPlus} size="2x" color="teal"
+                        onClick={this.createRoute}
+                    />
                     <Table striped bordered hover>
                         <thead>
                             <tr>
@@ -127,6 +141,18 @@ export default class extends Component {
                             { !this.props.edit.route.results.isLoading && this.props.edit.route.results.map(
                                 (result, index) => <RouteLineItem key={index} result={result} fetchTrace={this.props.fetchTrace} />
                             )}
+                            {this.state.isCreatingRoute &&
+                                <tr>
+                                    <td></td>
+                                    <td contenteditable={this.state.isEditing}></td>
+                                    <td contenteditable={this.state.isEditing}></td>
+                                    <td contenteditable={this.state.isEditing}></td>
+                                    <td contenteditable={this.state.isEditing}></td>
+                                    <td>
+                                        <Button variant="outline-success">Create</Button>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </Table>
                 </Col>
@@ -172,8 +198,8 @@ class AddressLineItem extends Component {
                 <td>{this.props.result.longitude}</td>
                 <td>
                     {this.state.isEditing
-                        ? <> <button>Cancel</button> <button>Submit</button> </>
-                        : <> <button onClick={this.deleteAddress}>Delete</button> <button>Related Route</button> </>
+                        ? <> <Button variant="outline-warning">Cancel</Button> <Button variant="outline-success">Submit</Button> </>
+                        : <> <Button variant="outline-danger" onClick={this.deleteAddress}>Delete</Button> <Button variant="outline-info">Related Route</Button> </>
                     }
                 </td>
             </tr>
@@ -200,10 +226,10 @@ class RouteLineItem extends Component {
                 <td>{this.props.result.method}</td>
                 <td>{this.props.result.cron}</td>
                 <td>
-                    <button>Delete</button>
-                    <button onClick={this.fetchRelatedTrace}>
+                    <Button variant="outline-danger">Delete</Button>
+                    <Button variant="outline-info" onClick={this.fetchRelatedTrace}>
                         Related Trace
-                    </button>
+                    </Button>
                 </td>
             </tr>
         );
@@ -227,7 +253,7 @@ class TraceLineItem extends Component {
                  <td>{(this.props.result.distance/1000).toFixed(2)} km</td>
                  <td>{this.props.result.created_at}</td>
                  <td>
-                     <button>Delete</button>
+                     <Button variant="outline-danger">Delete</Button>
                  </td>
              </tr>
          );
