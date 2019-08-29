@@ -8,12 +8,12 @@ export default (state = {}, action) => {
         }
         case 'FETCH_ADDRESS_SUCCESS': {
             newState.address.isLoading = false;
-            newState.address.results = action.data;
+            newState.address.results = action.results;
             return newState
         }
         case 'FETCH_ADDRESS_ERROR': {
             newState.address.isLoading = false;
-            newState.address.error = action.data;
+            newState.address.error = action.results;
             return newState
         }
         case 'CREATE_ADDRESS_TRY': {
@@ -22,12 +22,12 @@ export default (state = {}, action) => {
         }
         case 'CREATE_ADDRESS_SUCCESS': {
             newState.address.isLoading = false;
-            newState.address.results = action.data;
+            newState.address.results = action.results;
             return newState
         }
         case 'CREATE_ADDRESS_ERROR': {
             newState.address.isLoading = false;
-            newState.address.error = action.data;
+            newState.address.error = action.results;
             return newState
         }
         case 'FETCH_ROUTE_TRY': {
@@ -36,12 +36,12 @@ export default (state = {}, action) => {
         }
         case 'FETCH_ROUTE_SUCCESS': {
             newState.route.isLoading = false;
-            newState.route.results = action.data;
+            newState.route.results = action.results;
             return newState
         }
         case 'FETCH_ROUTE_ERROR': {
             newState.route.isLoading = false;
-            newState.route.error = action.data;
+            newState.route.error = action.results;
             return newState
         }
         case 'FETCH_TRACE_TRY': {
@@ -50,12 +50,12 @@ export default (state = {}, action) => {
         }
         case 'FETCH_TRACE_SUCCESS': {
             newState.trace.isLoading = false;
-            newState.trace.results = action.data;
+            newState.trace.results = action.results;
             return newState
         }
         case 'FETCH_TRACE_ERROR': {
             newState.trace.isLoading = false;
-            newState.trace.error = action.data;
+            newState.trace.error = action.results;
             return newState
         }
         default:

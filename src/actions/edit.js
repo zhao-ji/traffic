@@ -1,55 +1,72 @@
-import wsAPI from './utils';
+import axios from 'axios';
+import { secrets } from './secrets';
 
 const editActions = {
     fetchAddress: kwargs => dispatch => {
         dispatch({ type: "FETCH_ADDRESS_TRY", kwargs });
-        kwargs.type = "FETCH_ADDRESS_TRY";
-        wsAPI.send(kwargs);
-    },
-    createAddress: kwargs => dispatch => {
-        dispatch({ type: "CREATE_ADDRESS_TRY", kwargs });
-        kwargs.type = "CREATE_ADDRESS_TRY";
-        wsAPI.send(kwargs);
-    },
-    deleteAddress: kwargs => dispatch => {
-        dispatch({ type: "DELETE_ADDRESS_TRY", kwargs });
-        kwargs.type = "DELETE_ADDRESS_TRY";
-        wsAPI.send(kwargs);
-    },
-    updateAddress: kwargs => dispatch => {
-        dispatch({ type: "UPDATE_ADDRESS_TRY", kwargs });
-        kwargs.type = "UPDATE_ADDRESS_TRY";
-        wsAPI.send(kwargs);
+
+        axios.get(secrets.apiUrl + "/address")
+            .then(response => {
+                dispatch({ type: "FETCH_ADDRESS_SUCCESS", results: response.data, kwargs });
+            })
+            .catch(error => {
+                dispatch({ type: "FETCH_ADDRESS_ERROR", error: error, kwargs });
+            })
     },
     fetchRoute: kwargs => dispatch => {
         dispatch({ type: "FETCH_ROUTE_TRY", kwargs });
-        kwargs.type = "FETCH_ROUTE_TRY";
-        wsAPI.send(kwargs);
-    },
-    createRoute: kwargs => dispatch => {
-        dispatch({ type: "CREATE_ROUTE_TRY", kwargs });
-        kwargs.type = "CREATE_ROUTE_TRY";
-        wsAPI.send(kwargs);
-    },
-    deleteRoute: kwargs => dispatch => {
-        dispatch({ type: "DELETE_ROUTE_TRY", kwargs });
-        kwargs.type = "DELETE_ROUTE_TRY";
-        wsAPI.send(kwargs);
-    },
-    updateRoute: kwargs => dispatch => {
-        dispatch({ type: "UPDATE_ROUTE_TRY", kwargs });
-        kwargs.type = "UPDATE_ROUTE_TRY";
-        wsAPI.send(kwargs);
+
+        axios.get(secrets.apiUrl + "/route")
+            .then(response => {
+                dispatch({ type: "FETCH_ROUTE_SUCCESS", results: response.data, kwargs });
+            })
+            .catch(error => {
+                dispatch({ type: "FETCH_ROUTE_ERROR", error: error, kwargs });
+            })
     },
     fetchTrace: kwargs => dispatch => {
         dispatch({ type: "FETCH_TRACE_TRY", kwargs });
-        kwargs.type = "FETCH_TRACE_TRY";
-        wsAPI.send(kwargs);
+
+        axios.get(secrets.apiUrl + "/trace")
+            .then(response => {
+                dispatch({ type: "FETCH_TRACE_SUCCESS", results: response.data, kwargs });
+            })
+            .catch(error => {
+                dispatch({ type: "FETCH_TRACE_ERROR", error: error, kwargs });
+            })
     },
-    deleteTrace: kwargs => dispatch => {
-        dispatch({ type: "DELETE_TRACE_TRY", kwargs });
-        kwargs.type = "DELETE_TRACE_TRY";
-        wsAPI.send(kwargs);
+    createAddress: kwargs => dispatch => {
+        dispatch({ type: "CREATE_ADDRESS_TRY", kwargs });
+
+        axios.post(secrets.apiUrl + "/address")
+            .then(response => {
+                dispatch({ type: "CREATE_ADDRESS_SUCCESS", kwargs });
+            })
+            .catch(error => {
+                dispatch({ type: "CREATE_ADDRESS_ERROR", error: error, kwargs });
+            })
+    },
+    deleteAddress: kwargs => dispatch => {
+        dispatch({ type: "DELETE_ADDRESS_TRY", kwargs });
+
+        axios.delete(secrets.apiUrl + "/address")
+            .then(response => {
+                dispatch({ type: "DELETE_ADDRESS_SUCCESS", kwargs });
+            })
+            .catch(error => {
+                dispatch({ type: "DELETE_ADDRESS_ERROR", error: error, kwargs });
+            })
+    },
+    updateAddress: kwargs => dispatch => {
+        dispatch({ type: "UPDATE_ADDRESS_TRY", kwargs });
+
+        axios.put(secrets.apiUrl + "/address")
+            .then(response => {
+                dispatch({ type: "UPDATE_ADDRESS_SUCCESS", kwargs });
+            })
+            .catch(error => {
+                dispatch({ type: "UPDATE_ADDRESS_ERROR", error: error, kwargs });
+            })
     },
 }
 
