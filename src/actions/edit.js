@@ -27,7 +27,12 @@ const editActions = {
     fetchTrace: kwargs => dispatch => {
         dispatch({ type: "FETCH_TRACE_TRY", kwargs });
 
-        axios.get(secrets.apiUrl + "/trace")
+        const args = {
+            params: {
+                route_id: kwargs.route_id,
+            }
+        };
+        axios.get(secrets.apiUrl + "/trace", args)
             .then(response => {
                 dispatch({ type: "FETCH_TRACE_SUCCESS", results: response.data, kwargs });
             })

@@ -181,8 +181,10 @@ class AddressLineItem extends Component {
 class RouteLineItem extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
+    }
+
+    fetchRelatedTrace = () => {
+        this.props.fetchTrace({route_id: this.props.result.id});
     }
 
     render() {
@@ -195,7 +197,7 @@ class RouteLineItem extends Component {
                 <td>{this.props.result.cron}</td>
                 <td>
                     <button>Delete</button>
-                    <button onClick={() => this.props.fetchTrace({route_id: this.props.result.id})}>
+                    <button onClick={this.fetchRelatedTrace}>
                         Related Trace
                     </button>
                 </td>
