@@ -30,6 +30,34 @@ export default (state = {}, action) => {
             newState.address.error = action.results;
             return newState
         }
+        case 'DELETE_ADDRESS_TRY': {
+            newState.address.isLoading = true;
+            return newState
+        }
+        case 'DELETE_ADDRESS_SUCCESS': {
+            newState.address.isLoading = false;
+            newState.address.results = action.results;
+            return newState
+        }
+        case 'DELETE_ADDRESS_ERROR': {
+            newState.address.isLoading = false;
+            newState.address.error = action.results;
+            return newState
+        }
+        case 'UPDATE_ADDRESS_TRY': {
+            newState.address.isLoading = true;
+            return newState
+        }
+        case 'UPDATE_ADDRESS_SUCCESS': {
+            newState.address.isLoading = false;
+            newState.address.results = action.results;
+            return newState
+        }
+        case 'UPDATE_ADDRESS_ERROR': {
+            newState.address.isLoading = false;
+            newState.address.error = action.results;
+            return newState
+        }
         case 'FETCH_ROUTE_TRY': {
             newState.route.isLoading = true;
             return newState
