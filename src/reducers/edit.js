@@ -72,6 +72,48 @@ export default (state = {}, action) => {
             newState.route.error = action.results;
             return newState
         }
+        case 'CREATE_ROUTE_TRY': {
+            newState.route.isLoading = true;
+            return newState
+        }
+        case 'CREATE_ROUTE_SUCCESS': {
+            newState.route.isLoading = false;
+            newState.route.results = action.results;
+            return newState
+        }
+        case 'CREATE_ROUTE_ERROR': {
+            newState.route.isLoading = false;
+            newState.route.error = action.results;
+            return newState
+        }
+        case 'DELETE_ROUTE_TRY': {
+            newState.route.isLoading = true;
+            return newState
+        }
+        case 'DELETE_ROUTE_SUCCESS': {
+            newState.route.isLoading = false;
+            newState.route.results = action.results;
+            return newState
+        }
+        case 'DELETE_ROUTE_ERROR': {
+            newState.route.isLoading = false;
+            newState.route.error = action.results;
+            return newState
+        }
+        case 'UPDATE_ROUTE_TRY': {
+            newState.route.isLoading = true;
+            return newState
+        }
+        case 'UPDATE_ROUTE_SUCCESS': {
+            newState.route.isLoading = false;
+            newState.route.results = action.results;
+            return newState
+        }
+        case 'UPDATE_ROUTE_ERROR': {
+            newState.route.isLoading = false;
+            newState.route.error = action.results;
+            return newState
+        }
         case 'FETCH_TRACE_TRY': {
             newState.trace.isLoading = true;
             return newState
@@ -82,6 +124,20 @@ export default (state = {}, action) => {
             return newState
         }
         case 'FETCH_TRACE_ERROR': {
+            newState.trace.isLoading = false;
+            newState.trace.error = action.results;
+            return newState
+        }
+        case 'DELETE_TRACE_TRY': {
+            newState.trace.isLoading = true;
+            return newState
+        }
+        case 'DELETE_TRACE_SUCCESS': {
+            newState.trace.isLoading = false;
+            newState.trace.results = action.results;
+            return newState
+        }
+        case 'DELETE_TRACE_ERROR': {
             newState.trace.isLoading = false;
             newState.trace.error = action.results;
             return newState

@@ -66,6 +66,57 @@ const editActions = {
                 dispatch({ type: "FETCH_ROUTE_ERROR", error: error, kwargs });
             })
     },
+    createRoute: kwargs => dispatch => {
+        dispatch({ type: "CREATE_ROUTE_TRY", kwargs });
+
+        const args = {
+            start: kwargs.start,
+            stop: kwargs.stop,
+            method: kwargs.method,
+            cron: kwargs.cron,
+        };
+        axios.post(secrets.apiUrl + "/route", args)
+            .then(response => {
+                dispatch({ type: "CREATE_ROUTE_SUCCESS", results: response.data, kwargs });
+            })
+            .catch(error => {
+                dispatch({ type: "CREATE_ROUTE_ERROR", error: error, kwargs });
+            })
+    },
+    deleteRoute: kwargs => dispatch => {
+        dispatch({ type: "DELETE_ROUTE_TRY", kwargs });
+
+        const args = {
+            params: {
+                route_id: kwargs.route_id,
+            }
+        };
+        axios.delete(secrets.apiUrl + "/route", args)
+            .then(response => {
+                dispatch({ type: "DELETE_ROUTE_SUCCESS", results: response.data, kwargs });
+            })
+            .catch(error => {
+                dispatch({ type: "DELETE_ROUTE_ERROR", error: error, kwargs });
+            })
+    },
+    updateRoute: kwargs => dispatch => {
+        dispatch({ type: "UPDATE_ROUTE_TRY", kwargs });
+
+        const args = {
+            id: kwargs.start,
+            start: kwargs.start,
+            stop: kwargs.stop,
+            method: kwargs.method,
+            cron: kwargs.cron,
+        };
+        axios.put(secrets.apiUrl + "/route", args)
+            .then(response => {
+                dispatch({ type: "UPDATE_ROUTE_SUCCESS", results: response.data, kwargs });
+            })
+            .catch(error => {
+                dispatch({ type: "UPDATE_ROUTE_ERROR", error: error, kwargs });
+            })
+    },
     fetchTrace: kwargs => dispatch => {
         dispatch({ type: "FETCH_TRACE_TRY", kwargs });
 
@@ -80,6 +131,23 @@ const editActions = {
             })
             .catch(error => {
                 dispatch({ type: "FETCH_TRACE_ERROR", error: error, kwargs });
+            })
+    },
+    deleteTrace: kwargs => dispatch => {
+        dispatch({ type: "DELETE_TRACE_TRY", kwargs });
+
+        const args = {
+            params: {
+                trace_id: kwargs.id,
+                route_id: kwargs.route_id,
+            }
+        };
+        axios.delete(secrets.apiUrl + "/trace", args)
+            .then(response => {
+                dispatch({ type: "DELETE_TRACE_SUCCESS", results: response.data, kwargs });
+            })
+            .catch(error => {
+                dispatch({ type: "DELETE_TRACE_ERROR", error: error, kwargs });
             })
     },
 }
