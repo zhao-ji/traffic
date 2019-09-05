@@ -63,7 +63,13 @@ class AddressTable extends Component {
                         </thead>
                         <tbody>
                             {this.props.allAddress && this.props.allAddress.map(
-                                (result, index) => <AddressLineItem key={index} result={result} deleteAddress={this.props.deleteAddress}/>
+                                (result, index) =>
+                                    <AddressLineItem
+                                        key={index} result={result}
+                                        deleteAddress={this.props.deleteAddress}
+                                        updateAddress={this.props.updateAddress}
+                                        fetchRoute={this.props.fetchRoute}
+                                    />
                             )}
                             {this.state.isCreatingAddress &&
                                 <tr>
@@ -101,26 +107,73 @@ class AddressLineItem extends Component {
         this.props.deleteAddress({address_id: this.props.result.id});
     }
 
+    showRelatedRoute = () => {
+        this.props.fetchRoute({address_id: this.props.result.id});
+    }
+
     startEdit = () => {
         this.setState({ isEditing: true});
+    }
+
+    cancelEditing = () => {
+        this.setState({ isEditing: false, address: null, alias: null });
+    }
+
+    submit = () => {
+        this.props.updateAddress({
+            address_id: this.props.result.id,
+            address: this.state.address,
+            alias: this.state.alias,
+        });
+        this.cancelEditing();
     }
 
     onAddressChange = (event) => {
         this.setState({ address: event.target.value });
     }
 
+    onAliasChange = (event) => {
+        this.setState({ alias: event.target.value });
+    }
+
     render() {
         return (
             <tr>
                 <td>{this.props.result.id}</td>
-                <td onClick={this.startEdit} contentEditable={this.state.isEditing} onChange={this.onAddressChange}>{this.props.result.address}</td>
-                <td>{this.props.result.alias}</td>
+                {this.state.isEditing
+                        ?
+                        <>
+                        <td>
+                            <Form.Control
+                                type="text" onChange={this.onAddressChange}
+                                defaultValue={this.state.address || this.props.result.address} />
+                        </td>
+                        <td>
+                            <Form.Control
+                                type="text" onChange={this.onAliasChange}
+                                defaultValue={this.state.alias || this.props.result.alias} />
+                        </td>
+                        </>
+                        :
+                        <>
+                            <td onClick={this.startEdit}>{this.props.result.address}</td>
+                            <td onClick={this.startEdit}>{this.props.result.alias}</td>
+                        </>
+                }
                 <td>{this.props.result.latitude}</td>
                 <td>{this.props.result.longitude}</td>
                 <td>
                     {this.state.isEditing
-                        ? <> <Button variant="outline-warning">Cancel</Button> <Button variant="outline-success">Submit</Button> </>
-                        : <> <Button variant="outline-danger" onClick={this.deleteAddress}>Delete</Button> <Button variant="outline-info">Related Route</Button> </>
+                            ?
+                            <>
+                            <Button variant="outline-warning" onClick={this.cancelEditing}>Cancel</Button>
+                            <Button variant="outline-success" onClick={this.submit}>Submit</Button>
+                            </>
+                            :
+                            <>
+                            <Button variant="outline-danger" onClick={this.deleteAddress}>Delete</Button>
+                            <Button variant="outline-info" onClick={this.showRelatedRoute}>Related Route</Button>
+                            </>
                     }
                 </td>
             </tr>
@@ -207,9 +260,14 @@ class RouteTable extends Component {
                         </thead>
                         <tbody>
                             {this.props.allRoute && this.props.allRoute.map(
-                                (result, index) => <RouteLineItem
-                                    key={index} result={result}
-                                    fetchTrace={this.props.fetchTrace} deleteRoute={this.props.deleteRoute}/>
+                                (result, index) =>
+                                    <RouteLineItem
+                                        key={index} result={result}
+                                        allAddress={this.props.allAddress}
+                                        fetchTrace={this.props.fetchTrace}
+                                        deleteRoute={this.props.deleteRoute}
+                                        updateRoute={this.props.updateRoute}
+                                    />
                             )}
                             {this.state.isCreatingRoute &&
                                 <tr>
@@ -253,6 +311,17 @@ class RouteTable extends Component {
 
 
 class RouteLineItem extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isEditing: false,
+            start: null,
+            stop: null,
+            method: null,
+            cron: null,
+        };
+    }
+
     fetchRelatedTrace = () => {
         this.props.fetchTrace({route_id: this.props.result.id});
     }
@@ -261,17 +330,97 @@ class RouteLineItem extends Component {
         this.props.deleteRoute({route_id: this.props.result.id});
     }
 
+    startEdit = () => {
+        this.setState({ isEditing: true});
+    }
+
+    cancelEditing = () => {
+        this.setState({ isEditing: false, start: null, stop: null, method: null, cron: null });
+    }
+
+    submit = () => {
+        this.props.updateRoute({
+            route_id: this.props.result.id,
+            start: this.state.start,
+            stop: this.state.stop,
+            method: this.state.method,
+            cron: this.state.cron,
+        });
+        this.cancelEditing();
+    }
+
+    onStartChange = (event) => {
+        this.setState({ start: event.target.value });
+    }
+
+    onStopChange = (event) => {
+        this.setState({ stop: event.target.value });
+    }
+
+    onMethodChange = (event) => {
+        this.setState({ method: event.target.value });
+    }
+
+    onCronChange = (event) => {
+        this.setState({ cron: event.target.value });
+    }
+
     render() {
         return (
             <tr>
                 <td>{this.props.result.id}</td>
-                <td>{this.props.result.start.alias || this.props.result.start.address}</td>
-                <td>{this.props.result.stop.alias || this.props.result.stop.address}</td>
-                <td>{this.props.result.method}</td>
-                <td>{this.props.result.cron}</td>
+                {this.state.isEditing
+                        ?
+                        <>
+                        <td>
+                            <Form.Control as="select" onChange={this.onStartChange} defaultValue={this.props.result.start.id}>
+                                {this.props.allAddress.map(address => (
+                                    <option value={ address.id }>{ address.address }</option>
+                                ))}
+                            </Form.Control>
+                        </td>
+                        <td>
+                            <Form.Control as="select" onChange={this.onStopChange} defaultValue={this.props.result.stop.id}>
+                                {this.props.allAddress.map(address => (
+                                    <option value={ address.id }>{ address.address }</option>
+                                ))}
+                            </Form.Control>
+                        </td>
+                        <td>
+                            <Form.Control as="select" onChange={this.onMethodChange} defaultValue={this.props.result.method}>
+                                <option value="0">Driving</option>
+                                <option value="1">Walking</option>
+                                <option value="2">Bicycling</option>
+                                <option value="3">Transite</option>
+                            </Form.Control>
+                        </td>
+                        <td><Form.Control type="text" onChange={this.onCronChange} defaultValue={this.props.result.cron}/></td>
+                        </>
+                        :
+                        <>
+                            <td onClick={this.startEdit}>
+                                {this.props.result.start.alias || this.props.result.start.address}
+                            </td>
+                            <td onClick={this.startEdit}>
+                                {this.props.result.stop.alias || this.props.result.stop.address}
+                            </td>
+                            <td onClick={this.startEdit}>{this.props.result.method}</td>
+                            <td onClick={this.startEdit}>{this.props.result.cron}</td>
+                        </>
+                }
                 <td>
-                    <Button variant="outline-danger" onClick={this.deleteRoute}>Delete</Button>
-                    <Button variant="outline-info" onClick={this.fetchRelatedTrace}> Related Trace </Button>
+                    {this.state.isEditing
+                            ?
+                            <>
+                            <Button variant="outline-warning" onClick={this.cancelEditing}>Cancel</Button>
+                            <Button variant="outline-success" onClick={this.submit}>Submit</Button>
+                            </>
+                            :
+                            <>
+                            <Button variant="outline-danger" onClick={this.deleteRoute}>Delete</Button>
+                            <Button variant="outline-info" onClick={this.fetchRelatedTrace}> Related Trace </Button>
+                            </>
+                    }
                 </td>
             </tr>
         );

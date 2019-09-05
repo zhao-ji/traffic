@@ -47,7 +47,20 @@ const editActions = {
     updateAddress: kwargs => dispatch => {
         dispatch({ type: "UPDATE_ADDRESS_TRY", kwargs });
 
-        axios.put(secrets.apiUrl + "/address")
+        let content = {
+        };
+        if (kwargs.address) {
+            content["address"] = kwargs.address;
+        }
+        if (kwargs.alias) {
+            content["alias"] = kwargs.alias;
+        }
+        const args = {
+            params: {
+                address_id: kwargs.address_id,
+            },
+        };
+        axios.put(secrets.apiUrl + "/address", content, args)
             .then(response => {
                 dispatch({ type: "UPDATE_ADDRESS_SUCCESS", results: response.data, kwargs });
             })
@@ -58,7 +71,13 @@ const editActions = {
     fetchRoute: kwargs => dispatch => {
         dispatch({ type: "FETCH_ROUTE_TRY", kwargs });
 
-        axios.get(secrets.apiUrl + "/route")
+        const args = {
+            params: {},
+        };
+        if (kwargs.address_id) {
+            args["params"]["address_id"] = kwargs.address_id;
+        }
+        axios.get(secrets.apiUrl + "/route", args)
             .then(response => {
                 dispatch({ type: "FETCH_ROUTE_SUCCESS", results: response.data, kwargs });
             })
@@ -102,14 +121,26 @@ const editActions = {
     updateRoute: kwargs => dispatch => {
         dispatch({ type: "UPDATE_ROUTE_TRY", kwargs });
 
-        const args = {
-            id: kwargs.start,
-            start: kwargs.start,
-            stop: kwargs.stop,
-            method: kwargs.method,
-            cron: kwargs.cron,
+        let content = {
         };
-        axios.put(secrets.apiUrl + "/route", args)
+        if (kwargs.start) {
+            content["start"] = kwargs.address;
+        }
+        if (kwargs.stop) {
+            content["stop"] = kwargs.stop;
+        }
+        if (kwargs.method) {
+            content["method"] = kwargs.method;
+        }
+        if (kwargs.cron) {
+            content["cron"] = kwargs.cron;
+        }
+        const args = {
+            params: {
+                route_id: kwargs.route_id,
+            },
+        };
+        axios.put(secrets.apiUrl + "/route", content, args)
             .then(response => {
                 dispatch({ type: "UPDATE_ROUTE_SUCCESS", results: response.data, kwargs });
             })

@@ -28,6 +28,7 @@ export default class extends Component {
                 deleteAddress={this.props.deleteAddress}
                 createAddress={this.props.createAddress}
                 updateAddress={this.props.updateAddress}
+                fetchRoute={this.props.fetchRoute}
             />
             <hr />
             <TableElement.RouteTable
