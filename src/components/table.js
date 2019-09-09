@@ -441,6 +441,7 @@ class TraceTable extends Component {
                             <tr>
                                 <th>ID</th>
                                 <th>Route</th>
+                                <th>Source</th>
                                 <th>Duration</th>
                                 <th>Distance</th>
                                 <th>Time</th>
@@ -475,6 +476,7 @@ class TraceLineItem extends Component {
             <tr>
                 <td>{this.props.result.id}</td>
                 <td>{this.props.result.route.id}</td>
+                <td>{this.props.result.source}</td>
                 <td>{(this.props.result.duration/60).toFixed(2)} min</td>
                 <td>{(this.props.result.distance/1000).toFixed(2)} km</td>
                 <td>{this.props.result.created_at}</td>
