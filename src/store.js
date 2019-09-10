@@ -23,6 +23,11 @@ function initialState() {
                 results: [],
                 side: null,
             },
+            place: {
+                isLoading: false,
+                results: [],
+                side: null,
+            },
             google: {
                 isLoading: false,
                 result: null,

@@ -19,6 +19,11 @@ const traceActions = {
         kwargs.type = "FETCH_ADDRESS_SUGGESTIONS_TRY";
         wsAPI.send(kwargs);
     },
+    fetchPlace: kwargs => dispatch => {
+        dispatch({ type: "FETCH_PLACE_TRY", kwargs });
+        kwargs.type = "FETCH_PLACE_TRY";
+        wsAPI.send(kwargs);
+    },
     cleanAddressSuggestions: () => dispatch => {
         dispatch({ type: "CLEAN_ADDRESS_SUGGESTIONS" });
     },

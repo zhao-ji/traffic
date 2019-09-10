@@ -70,6 +70,7 @@ export default class extends Component {
             side: type,
             text: event.target.value,
         });
+        this.props.fetchPlace({ side: type, text: event.target.value });
     }
 
     onSuggestionClick(type, event) {
@@ -79,6 +80,7 @@ export default class extends Component {
             this.setState({ stop: event.currentTarget.dataset.value });
         }
         this.props.cleanAddressSuggestions();
+        this.props.cleanPlace();
     }
 
     renderSuggestions() {
@@ -92,6 +94,7 @@ export default class extends Component {
         } else if (suggestions.side === "stop") {
             grid.offset = 7;
         }
+        console.log(this.props.trace.place);
         return (
             <Row>
                 <Col md={grid} lg={grid}>

@@ -63,6 +63,28 @@ export default (state = {}, action) => {
             newState.suggestions.results = [];
             return newState
         }
+        case 'FETCH_PLACE_TRY': {
+            newState.place = {
+                isLoading: true,
+                side: action.kwargs.side,
+                kwargs: action.kwargs,
+            };
+            return newState
+        }
+        case 'FETCH_PLACE_SUCCESS': {
+            newState.place.isLoading = false;
+            newState.place.results = action.data;
+            return newState
+        }
+        case 'FETCH_PLACE_ERROR': {
+            newState.place.isLoading = false;
+            newState.place.error = action.data;
+            return newState
+        }
+        case 'CLEAN_PLACE': {
+            newState.place.results = [];
+            return newState
+        }
         default:
             return newState;
     }
