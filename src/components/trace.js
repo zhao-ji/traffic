@@ -94,11 +94,20 @@ export default class extends Component {
         } else if (suggestions.side === "stop") {
             grid.offset = 7;
         }
-        console.log(this.props.trace.place);
         return (
             <Row>
                 <Col md={grid} lg={grid}>
                     <ListGroup style={{marginTop: "-1em" }}>
+                        {this.props.trace.place.results && this.props.trace.place.results.map((s, index) => (
+                            <ListGroup.Item
+                                key={index}
+                                data-value={s.formatted_address}
+                                onClick={(event) => this.onSuggestionClick(suggestions.side, event)}
+                                action
+                            >
+                                {s.name} ({s.formatted_address})
+                            </ListGroup.Item>
+                        ))}
                         {suggestions.results.map((s, index) => (
                             <ListGroup.Item
                                 key={index}

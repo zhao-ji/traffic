@@ -27,6 +27,9 @@ const traceActions = {
     cleanAddressSuggestions: () => dispatch => {
         dispatch({ type: "CLEAN_ADDRESS_SUGGESTIONS" });
     },
+    cleanPlace: () => dispatch => {
+        dispatch({ type: "CLEAN_PLACE" });
+    },
 }
 
 export default traceActions;
