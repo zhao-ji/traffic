@@ -1,15 +1,8 @@
 import React, {Component} from 'react';
 import Moment from 'moment';
-import {
-  XYPlot,
-  XAxis,
-  YAxis,
-  HorizontalGridLines,
-  LineSeries,
-  DiscreteColorLegend,
-} from 'react-vis';
 
 import utils from '../utils';
+import Example from './chart'
 
 export default class extends Component {
     constructor(props) {
@@ -43,51 +36,40 @@ export default class extends Component {
 
     render()  {
         const trafficData = this.props.traffic.results;
-        if (trafficData.length <= 0) {
-            return false;
-        };
+        // if (trafficData.length <= 0) {
+        //     return false;
+        // };
 
         let routes = trafficData.map(item => `${item["start"]} - ${item["stop"]}`);
         return (
-            <>
-            <DiscreteColorLegend 
-                items={routes.map(route => {return {"title": route}})}
-                orientation="horizontal"
-                onItemClick={this.onLegendClick}
-            />
-            <Chart>
-                {trafficData.map((route, index) => ( !route.disabled &&
-                    <LineSeries key={index} data={route.data.map(item => ({x: Moment(item[0]), y: item[1]/60}))} />
-                ))}
-            </Chart>
-            </>
+            <Example />
         );
     }
 }
 
-class Chart extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
-    render() {
-        const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - 200;
-        const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 300;
-        return (
-            <XYPlot width={w} height={h}>
-                <HorizontalGridLines />
-                <XAxis
-                    title="Time"
-                    tickFormat={d => Moment(d).format('MM-DD HH:MM')}
-                    tickTotal={10}
-                />
-                <YAxis
-                    title="Duration (min)"
-                    tickValues={utils.range(0, 51, 5)}
-                />
-                {this.props.children}
-            </XYPlot>
-        );
-    }
-}
+// class Chart extends Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {};
+//     }
+// 
+//     render() {
+//         const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) - 200;
+//         const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - 300;
+//         return (
+//             <XYPlot width={w} height={h}>
+//                 <HorizontalGridLines />
+//                 <XAxis
+//                     title="Time"
+//                     tickFormat={d => Moment(d).format('MM-DD HH:MM')}
+//                     tickTotal={10}
+//                 />
+//                 <YAxis
+//                     title="Duration (min)"
+//                     tickValues={utils.range(0, 51, 5)}
+//                 />
+//                 {this.props.children}
+//             </XYPlot>
+//         );
+//     }
+// }
